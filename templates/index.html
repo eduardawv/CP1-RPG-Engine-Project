@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>SQLgard - RPG Engine</title>
+<style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .btn { background-color: #dc3545; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; }
+        .btn:hover { background-color: #c82333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .status-caido { background-color: #f8d7da; }
+</style>
+</head>
+<body>
+ 
+    <h2>SQLgard - RPG Engine</h2>
+<p>O Despertar do Kernel Ancestral</p>
+<p><i>Uma nevoa venenosa drena a vida de todos os herois...</i></p>
+ 
+    <button class="btn" onclick="proximoTurno()">Proximo Turno</button>
+ 
+    <table id="tabelaHerois">
+<thead>
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Classe</th>
+<th>HP</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+ 
+    <script>
+        async function carregarHerois() {
+            const resposta = await fetch('/herois');
+            const herois = await resposta.json();
+            const tbody = document.querySelector('#tabelaHerois tbody');
+            tbody.innerHTML = '';
+ 
+            herois.forEach(heroi => {
+                const classeCaido = heroi.status === 'CAÍDO' ? 'status-caido' : '';
+                tbody.innerHTML += `
+<tr class="${classeCaido}">
+<td>${heroi.id_heroi}</td>
+<td>${heroi.nome}</td>
+<td>${heroi.classe}</td>
+<td>${heroi.hp_atual}/${heroi.hp_max}</td>
+<td>${heroi.status}</td>
+</tr>
+                `;
+            });
+        }
+ 
+async function proximoTurno() {
+
+    const resposta = await fetch('/processar', { method: 'POST' });
+
+    if (!resposta.ok) {
+        console.error("Erro na rota /processar");
+        return;
+    }
+
+    const data = await resposta.json();
+    console.log(data);
+
+    carregarHerois();
+}
+
+</script>
+</body>
+</html>
