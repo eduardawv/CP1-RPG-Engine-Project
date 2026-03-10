@@ -44,6 +44,33 @@ def herois():
 
     return jsonify(resultado)
 
+@app.route("/resetar", methods=["POST"])
+def resetar():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    plsql = """
+
+    BEGIN
+
+        UPDATE TB_HEROIS
+        SET hp_atual = hp_max,
+            status = 'ATIVO';
+
+        COMMIT;
+
+    END;
+
+    """
+
+    cursor.execute(plsql)
+
+    cursor.close()
+    conn.close()
+
+    return {"status": "vida resetada"}
+
 
 @app.route("/processar", methods=["POST"])
 def processar():

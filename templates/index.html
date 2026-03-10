@@ -6,6 +6,7 @@
 <style>
         body { font-family: Arial, sans-serif; margin: 40px; }
         .btn { background-color: #dc3545; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; }
+        .btn1 { background-color: #06bd00; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; }
         .btn:hover { background-color: #c82333; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
@@ -20,6 +21,7 @@
 <p><i>Uma nevoa venenosa drena a vida de todos os herois...</i></p>
  
     <button class="btn" onclick="proximoTurno()">Proximo Turno</button>
+    <button class="btn1" onclick="resetarVida()">Resetar Vida</button>
  
     <table id="tabelaHerois">
 <thead>
@@ -62,6 +64,21 @@ async function proximoTurno() {
 
     if (!resposta.ok) {
         console.error("Erro na rota /processar");
+        return;
+    }
+
+    const data = await resposta.json();
+    console.log(data);
+
+    carregarHerois();
+}
+
+async function resetarVida() {
+
+    const resposta = await fetch('/resetar', { method: 'POST' });
+
+    if (!resposta.ok) {
+        console.error("Erro na rota /resetar");
         return;
     }
 
